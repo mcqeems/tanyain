@@ -15,8 +15,10 @@ interface QuizState {
   score: Score
   status: 'idle' | 'playing' | 'finished'
   timeLeft: number
+  config: { amount: number; category: string; difficulty: string; type: string }
   
   setUsername: (name: string) => void
+  setConfig: (config: { amount: number; category: string; difficulty: string; type: string }) => void
   setQuestions: (questions: Question[]) => void
   startQuiz: () => void
   answerQuestion: (isCorrect: boolean) => void
@@ -34,8 +36,10 @@ export const useQuizStore = create<QuizState>()(
       score: { correct: 0, wrong: 0, answered: 0 },
       status: 'idle', 
       timeLeft: 60,
+      config: { amount: 10, category: '', difficulty: '', type: '' },
       
       setUsername: (name) => set({ username: name }),
+      setConfig: (config) => set({ config }),
       
       setQuestions: (questions) => set({ 
         questions, 

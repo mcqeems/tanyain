@@ -15,9 +15,21 @@ interface OpenTDBResponse {
   results: Omit<Question, 'answers'>[]
 }
 
-export const fetchQuestions = async (amount: number = 10): Promise<Question[]> => {
+export interface QuizConfig {
+  amount: number
+  category: string | number
+  difficulty: string
+  type: string
+}
+
+export const fetchQuestions = async (config: QuizConfig): Promise<Question[]> => {
   try {
-    const res = await axios.get<OpenTDBResponse>(`https://opentdb.com/api.php?amount=${amount}`)
+    let url = `https://opentdb.com/api.php?amount=${config.amount}`
+    if (config.category) url += `&category=${config.category}`
+    if (config.difficulty) url += `&difficulty=${config.difficulty}`
+    if (config.type) url += `&type=${config.type}`
+    
+    const res = await axios.get<OpenTDBResponse>(url)
     if (res.data.response_code !== 0) {
       throw new Error('Failed to fetch questions')
     }
