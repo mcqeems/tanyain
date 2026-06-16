@@ -2,6 +2,17 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { Question } from '../api/opentdb'
 
+const getDuration = (amount: number) => {
+  switch (amount) {
+    case 5: return 2 * 60;
+    case 10: return 5 * 60;
+    case 15: return 7 * 60 + 30;
+    case 20: return 10 * 60;
+    case 50: return 25 * 60;
+    default: return amount * 30;
+  }
+}
+
 interface Score {
   correct: number
   wrong: number
@@ -35,21 +46,21 @@ export const useQuizStore = create<QuizState>()(
       currentIdx: 0,
       score: { correct: 0, wrong: 0, answered: 0 },
       status: 'idle', 
-      timeLeft: 60,
+      timeLeft: getDuration(10),
       config: { amount: 10, category: '', difficulty: '', type: '' },
       
       setUsername: (name) => set({ username: name }),
       setConfig: (config) => set({ config }),
       
-      setQuestions: (questions) => set({ 
+      setQuestions: (questions) => set((state) => ({ 
         questions, 
         currentIdx: 0, 
         score: { correct: 0, wrong: 0, answered: 0 },
         status: 'idle',
-        timeLeft: 60
-      }),
+        timeLeft: getDuration(state.config.amount)
+      })),
       
-      startQuiz: () => set({ status: 'playing', timeLeft: 60 }),
+      startQuiz: () => set((state) => ({ status: 'playing', timeLeft: getDuration(state.config.amount) })),
       
       answerQuestion: (isCorrect) => {
         const { currentIdx, questions, score } = get()
@@ -78,13 +89,13 @@ export const useQuizStore = create<QuizState>()(
       
       finishQuiz: () => set({ status: 'finished' }),
       
-      reset: () => set({ 
+      reset: () => set((state) => ({ 
         questions: [], 
         currentIdx: 0, 
         score: { correct: 0, wrong: 0, answered: 0 }, 
         status: 'idle', 
-        timeLeft: 60 
-      })
+        timeLeft: getDuration(state.config.amount) 
+      }))
     }),
     {
       name: 'tanya-in-quiz-storage',

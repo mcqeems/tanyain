@@ -39,6 +39,12 @@ export const QuizView = () => {
 
   const q = questions[currentIdx]
 
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60)
+    const s = seconds % 60
+    return `${m}:${s.toString().padStart(2, '0')}`
+  }
+
   return (
     <div className="mx-auto max-w-[960px] px-4 py-12 md:py-24">
       <div className="mb-12 flex items-end justify-between border-b border-hairline pb-4">
@@ -51,7 +57,7 @@ export const QuizView = () => {
           </div>
         </div>
         <div className="text-[16px] font-bold text-ink">
-          Time: <span className={timeLeft <= 10 ? 'text-danger' : ''}>{timeLeft}s</span>
+          Time: <span className={timeLeft <= 10 ? 'text-danger' : ''}>{formatTime(timeLeft)}</span>
         </div>
       </div>
 
