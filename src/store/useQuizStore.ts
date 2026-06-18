@@ -1,104 +1,112 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-import type { Question } from '../api/opentdb'
-
-const getDuration = (amount: number) => {
-  switch (amount) {
-    case 5: return 2 * 60;
-    case 10: return 5 * 60;
-    case 15: return 7 * 60 + 30;
-    case 20: return 10 * 60;
-    case 50: return 25 * 60;
-    default: return amount * 30;
-  }
-}
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import type { Question } from "../api/opentdb";
 
 interface Score {
-  correct: number
-  wrong: number
-  answered: number
+  correct: number;
+  wrong: number;
+  answered: number;
 }
 
 interface QuizState {
-  username: string
-  questions: Question[]
-  currentIdx: number
-  score: Score
-  status: 'idle' | 'playing' | 'finished'
-  timeLeft: number
-  config: { amount: number; category: string; difficulty: string; type: string }
-  
-  setUsername: (name: string) => void
-  setConfig: (config: { amount: number; category: string; difficulty: string; type: string }) => void
-  setQuestions: (questions: Question[]) => void
-  startQuiz: () => void
-  answerQuestion: (isCorrect: boolean) => void
-  tick: () => void
-  finishQuiz: () => void
-  reset: () => void
+  username: string;
+  questions: Question[];
+  currentIdx: number;
+  score: Score;
+  status: "idle" | "playing" | "finished";
+  timeLeft: number;
+  config: { amount: number; category: string; difficulty: string; type: string };
+
+  setUsername: (name: string) => void;
+  setConfig: (config: { amount: number; category: string; difficulty: string; type: string }) => void;
+  setQuestions: (questions: Question[]) => void;
+  startQuiz: () => void;
+  answerQuestion: (isCorrect: boolean) => void;
+  tick: () => void;
+  finishQuiz: () => void;
+  reset: () => void;
 }
+
+const getDuration = (amount: number) => {
+  switch (amount) {
+    case 5:
+      return 2 * 60;
+    case 10:
+      return 5 * 60;
+    case 15:
+      return 7 * 60 + 30;
+    case 20:
+      return 10 * 60;
+    case 50:
+      return 25 * 60;
+    default:
+      return amount * 30;
+  }
+};
 
 export const useQuizStore = create<QuizState>()(
   persist(
     (set, get) => ({
-      username: '',
+      username: "",
       questions: [],
       currentIdx: 0,
       score: { correct: 0, wrong: 0, answered: 0 },
-      status: 'idle', 
+      status: "idle",
       timeLeft: getDuration(10),
-      config: { amount: 10, category: '', difficulty: '', type: '' },
-      
+      config: { amount: 10, category: "", difficulty: "", type: "" },
+
       setUsername: (name) => set({ username: name }),
       setConfig: (config) => set({ config }),
-      
-      setQuestions: (questions) => set((state) => ({ 
-        questions, 
-        currentIdx: 0, 
-        score: { correct: 0, wrong: 0, answered: 0 },
-        status: 'idle',
-        timeLeft: getDuration(state.config.amount)
-      })),
-      
-      startQuiz: () => set((state) => ({ status: 'playing', timeLeft: getDuration(state.config.amount) })),
-      
+
+      setQuestions: (questions) =>
+        set((state) => ({
+          questions,
+          currentIdx: 0,
+          score: { correct: 0, wrong: 0, answered: 0 },
+          status: "idle",
+          timeLeft: getDuration(state.config.amount),
+        })),
+
+      startQuiz: () => set((state) => ({ status: "playing", timeLeft: getDuration(state.config.amount) })),
+
       answerQuestion: (isCorrect) => {
-        const { currentIdx, questions, score } = get()
+        const { currentIdx, questions, score } = get();
         const newScore = {
           correct: score.correct + (isCorrect ? 1 : 0),
           wrong: score.wrong + (!isCorrect ? 1 : 0),
-          answered: score.answered + 1
-        }
-        
+          answered: score.answered + 1,
+        };
+
         if (currentIdx + 1 >= questions.length) {
-          set({ score: newScore, status: 'finished' })
+          set({ score: newScore, status: "finished" });
         } else {
-          set({ score: newScore, currentIdx: currentIdx + 1 })
+          set({ score: newScore, currentIdx: currentIdx + 1 });
         }
       },
-      
+
       tick: () => {
-        const { timeLeft, status } = get()
-        if (status !== 'playing') return
+        const { timeLeft, status } = get();
+        if (status !== "playing") return;
         if (timeLeft <= 1) {
-          set({ timeLeft: 0, status: 'finished' })
+          set({ timeLeft: 0, status: "finished" });
         } else {
-          set({ timeLeft: timeLeft - 1 })
+          set({ timeLeft: timeLeft - 1 });
         }
       },
-      
-      finishQuiz: () => set({ status: 'finished' }),
-      
-      reset: () => set((state) => ({ 
-        questions: [], 
-        currentIdx: 0, 
-        score: { correct: 0, wrong: 0, answered: 0 }, 
-        status: 'idle', 
-        timeLeft: getDuration(state.config.amount) 
-      }))
+
+      finishQuiz: () => set({ status: "finished" }),
+
+      reset: () =>
+        set((state) => ({
+          questions: [],
+          currentIdx: 0,
+          score: { correct: 0, wrong: 0, answered: 0 },
+          status: "idle",
+          timeLeft: getDuration(state.config.amount),
+        })),
     }),
     {
-      name: 'tanya-in-quiz-storage',
-    }
-  )
-)
+      name: "tanya-in-quiz-storage",
+    },
+  ),
+);
