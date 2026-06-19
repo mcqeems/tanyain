@@ -1,39 +1,39 @@
-import { useState, type FormEvent } from "react"
-import { useNavigate } from "react-router-dom"
-import { motion } from "motion/react"
-import { Settings, LogOut } from "lucide-react"
-import { useQuizStore } from "../store/useQuizStore"
-import { useAuthStore } from "../store/useAuthStore"
-import { fetchQuestions } from "../api/opentdb"
-import { Card } from "../components/ui/Card"
-import { Button } from "../components/ui/Button"
-import { SettingsModal } from "../components/ui/SettingsModal"
+import { useState, type FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "motion/react";
+import { Settings, LogOut } from "lucide-react";
+import { useQuizStore } from "../store/useQuizStore";
+import { useAuthStore } from "../store/useAuthStore";
+import { fetchQuestions } from "../api/opentdb";
+import { Card } from "../components/ui/Card";
+import { Button } from "../components/ui/Button";
+import { SettingsModal } from "../components/ui/SettingsModal";
 
-export const LoginView = () => {
-  const navigate = useNavigate()
-  const currentUser = useAuthStore((s) => s.currentUser)
-  const logout = useAuthStore((s) => s.logout)
-  const { setUsername, setQuestions, startQuiz, config } = useQuizStore()
-  const [loading, setLoading] = useState(false)
-  const [showSettings, setShowSettings] = useState(false)
+export const StartView = () => {
+  const navigate = useNavigate();
+  const currentUser = useAuthStore((s) => s.currentUser);
+  const logout = useAuthStore((s) => s.logout);
+  const { setUsername, setQuestions, startQuiz, config } = useQuizStore();
+  const [loading, setLoading] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const handleStart = async (e: FormEvent) => {
-    e.preventDefault()
-    if (!currentUser) return
+    e.preventDefault();
+    if (!currentUser) return;
 
-    setLoading(true)
-    setUsername(currentUser)
-    const qs = await fetchQuestions(config)
-    setQuestions(qs)
-    startQuiz()
-    setLoading(false)
-    navigate("/quiz")
-  }
+    setLoading(true);
+    setUsername(currentUser);
+    const qs = await fetchQuestions(config);
+    setQuestions(qs);
+    startQuiz();
+    setLoading(false);
+    navigate("/quiz");
+  };
 
   const handleLogout = () => {
-    logout()
-    navigate("/auth")
-  }
+    logout();
+    navigate("/auth");
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4 relative">
@@ -59,20 +59,14 @@ export const LoginView = () => {
       </div>
 
       <div className="w-full max-w-md">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8 text-center"
-        >
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8 text-center">
           <div className="mb-4 text-[38px] font-bold leading-[1.5] tracking-tight">[TanyaIn!]</div>
           <div className="text-[16px] text-mute">All Rounder Quiz Games</div>
         </motion.div>
 
         <Card dark={true}>
           <div className="mb-6 border-b border-hairline-strong pb-4">
-            <h2 className="text-[16px] font-bold text-on-primary">
-              [+] Welcome, {currentUser}
-            </h2>
+            <h2 className="text-[16px] font-bold text-on-primary">[+] Welcome, {currentUser}</h2>
           </div>
           <form onSubmit={handleStart} className="flex flex-col gap-6">
             <div className="flex flex-col gap-2 text-[14px] text-ash">
@@ -102,5 +96,5 @@ export const LoginView = () => {
 
       <SettingsModal isOpen={showSettings} onClose={() => setShowSettings(false)} />
     </div>
-  )
-}
+  );
+};
