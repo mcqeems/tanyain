@@ -13,9 +13,9 @@ function App() {
     <div className="min-h-screen bg-canvas text-body selection:bg-ink selection:text-canvas">
       <main>
         <Routes>
-          <Route path="/auth" element={currentUser ? <Navigate to="/" replace /> : <AuthView />} />
+          <Route path="/" element={currentUser ? <Navigate to="/start" replace /> : <AuthView />} />
           <Route
-            path="/"
+            path="/start"
             element={
               <ProtectedRoute>
                 <StartView />

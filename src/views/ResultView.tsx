@@ -1,26 +1,26 @@
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { motion } from 'motion/react'
-import { useQuizStore } from '../store/useQuizStore'
-import { Card } from '../components/ui/Card'
-import { Button } from '../components/ui/Button'
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "motion/react";
+import { useQuizStore } from "../store/useQuizStore";
+import { Card } from "../components/ui/Card";
+import { Button } from "../components/ui/Button";
 
 export const ResultView = () => {
-  const navigate = useNavigate()
-  const { username, score, questions, status, reset } = useQuizStore()
+  const navigate = useNavigate();
+  const { username, score, questions, status, reset } = useQuizStore();
 
   useEffect(() => {
-    if (status !== 'finished') {
-      navigate('/')
+    if (status !== "finished") {
+      navigate("/start");
     }
-  }, [status, navigate])
+  }, [status, navigate]);
 
   const handleRestart = () => {
-    reset()
-    navigate('/')
-  }
+    reset();
+    navigate("/start");
+  };
 
-  if (status !== 'finished') return null
+  if (status !== "finished") return null;
 
   return (
     <div className="mx-auto max-w-[960px] px-4 py-12 md:py-24">
@@ -38,7 +38,7 @@ export const ResultView = () => {
           <div className="mb-6 border-b border-hairline-strong pb-4">
             <h2 className="text-[16px] font-bold text-on-primary">[x] Results Summary</h2>
           </div>
-          
+
           <div className="flex flex-col gap-4 text-[16px]">
             <div className="flex justify-between">
               <span className="text-ash">Total Questions</span>
@@ -64,5 +64,5 @@ export const ResultView = () => {
         </div>
       </motion.div>
     </div>
-  )
-}
+  );
+};

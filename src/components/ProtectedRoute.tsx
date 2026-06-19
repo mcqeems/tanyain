@@ -1,16 +1,16 @@
-import { Navigate } from "react-router-dom"
-import { useAuthStore } from "../store/useAuthStore"
+import { Navigate } from "react-router-dom";
+import { useAuthStore } from "../store/useAuthStore";
 
 interface ProtectedRouteProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const currentUser = useAuthStore((s) => s.currentUser)
+  const currentUser = useAuthStore((s) => s.currentUser);
 
   if (!currentUser) {
-    return <Navigate to="/auth" replace />
+    return <Navigate to="/" replace />;
   }
 
-  return <>{children}</>
-}
+  return <>{children}</>;
+};

@@ -33,7 +33,7 @@ export const StartView = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/auth");
+    navigate("/");
   };
 
   return (
