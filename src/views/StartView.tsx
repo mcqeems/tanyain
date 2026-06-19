@@ -8,6 +8,7 @@ import { fetchQuestions } from "../api/opentdb";
 import { Card } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
 import { SettingsModal } from "../components/ui/SettingsModal";
+import { CATEGORIES, DIFFICULTIES, TYPES } from "../components/ui/SettingsModal";
 
 export const StartView = () => {
   const navigate = useNavigate();
@@ -76,15 +77,21 @@ export const StartView = () => {
               </div>
               <div className="flex justify-between">
                 <span>Category</span>
-                <span className="font-bold text-on-primary">{config.category || "Any"}</span>
+                <span className="font-bold text-on-primary">
+                  {CATEGORIES.find((category) => category.id === Number(config.category))?.name || "Any"}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span>Difficulty</span>
-                <span className="font-bold text-on-primary">{config.difficulty || "Any"}</span>
+                <span className="font-bold text-on-primary">
+                  {DIFFICULTIES.find((difficulty) => difficulty.id === config.difficulty)?.name || "Any"}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span>Type</span>
-                <span className="font-bold text-on-primary">{config.type || "Any"}</span>
+                <span className="font-bold text-on-primary">
+                  {TYPES.find((type) => type.id === config.type)?.name || "Any"}
+                </span>
               </div>
             </div>
             <Button type="submit" variant="secondary" disabled={loading}>
